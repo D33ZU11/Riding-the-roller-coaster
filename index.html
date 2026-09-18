@@ -276,7 +276,7 @@
         
         <!-- SETUP PHASE -->
         <div id="game-intro">
-            <p>Ready to let fate dictate the session? Hand over control and let the rules guide his path to climax while she receives his dominance and pleasure.</p>
+            <p>Ready to let fate dictate the session? Hand over your control, accept your lower place, and serve his pleasure.</p>
             <button onclick="startSequence()">Let's Play</button>
         </div>
 
@@ -343,58 +343,58 @@
 
     <script>
         const subAttirePool = [
-            "Female sub spread-eagled and bound with cuffs", 
-            "Female sub completely bare, exposed, and vulnerable", 
-            "Female sub locked in position with heavy bondage", 
-            "Female sub collared, restrained, and awaiting orders"
+            "Forced on hands and knees like an obedient pet, completely bare and exposed", 
+            "Strapped down, utterly helpless, and designated solely as his personal use toy", 
+            "Collared tightly, chained to the floor, and stripped of all personal dignity", 
+            "Bent over furniture, position locked, waiting passively for his pleasure"
         ];
 
         const domActionsPool = [
-            "Intense oral focus and deep throat command on the female sub", 
-            "Vibrator / toy torture and teasing on the female sub", 
-            "Spanking and tactile sensory impact play on the female sub", 
-            "Forced deep breathing, vocal relaxation, and sensory overload"
+            "Forced deepthroat and oral degradation command", 
+            "Spitting directly into the sub's mouth or face as a marker of ownership", 
+            "Rough slaps, hair-pulling, and aggressive impact control", 
+            "Forced humiliating speech and verbal submission checks"
         ];
 
         const step3Pool = [
-            "Allowed 1 full, powerful male climax", 
-            "Strictly ruined & denied completely by the male Dom", 
-            "Edge-fed only (male permitted right at the final second)", 
-            "Edged 3 times in a row, then male is permitted"
+            "Allowed 1 full, messy male climax delivered wherever he chooses", 
+            "Strictly ruined & denied completely—he cums empty while you watch", 
+            "Edge-fed only (permitted right at the final second after torture)", 
+            "Edged 3 times in a row while being degraded, then permitted"
         ];
 
         const specialGameElementPool = [
-            "Mandatory absolute stillness command during peak male intensity", 
-            "Forced sudden pause mid-stroke with relaxation breaths for the female", 
-            "Immediate sensory deprivation or blindfold trigger for the sub", 
-            "Forced vocal release and relaxation sighs check for the female sub"
+            "Mandatory absolute stillness command while he uses your mouth or body", 
+            "Forced sudden throat/oral break mid-stroke to test obedience", 
+            "Immediate humiliation penalty trigger for any unauthorized movement", 
+            "Forced verbal worship of his supremacy while he strokes"
         ];
 
-        // Non-Repeating Dom Action Pools (Male Dom to Female Sub)
+        // Explicit, Degrading Dom Action Pools (Male Dom to Female Sub)
         const domActionPools = {
             0: [
-                "Male Dom commands the female sub to let out soft sighs and relax her body completely.",
-                "Male Dom delivers 2 sharp slaps across the sub's thighs or rear to enforce focus.",
-                "Male Dom pauses the stroking to focus entirely on oral stimulation for the female sub.",
-                "Male Dom wraps a hand around the sub's throat, demanding deep breaths while maintaining slow strokes."
+                "Male Dom spits directly into the sub's open mouth and demands she swallow it without hesitation.",
+                "Male Dom delivers two sharp, stinging slaps across the sub's face to remind her of her place.",
+                "Male Dom grabs a handful of hair, jerks the sub's head back, and forces her to look up at his erection.",
+                "Male Dom wraps a heavy hand around the sub's throat and squeezes while commanding her to beg for permission."
             ],
             1: [
-                "Male Dom commands the female sub to vocalize louder to help her let go of tension.",
-                "Male Dom delivers heavy restraint checks and tactile impact play to spike the sub's arousal.",
-                "Male Dom pauses to use toy torture on the female sub, keeping her on edge.",
-                "Male Dom commands the sub into a deep breathing cycle while maintaining a steady rhythm."
+                "Male Dom forces the sub to open wide, spits a thick load of saliva onto her tongue, and orders her to lick it clean.",
+                "Male Dom inflicts heavy impact play across the sub's body to spike her humiliation and adrenaline.",
+                "Male Dom forces the sub to chant 'I am your worthless toy' while he controls the stroke pace.",
+                "Male Dom chokes the sub hard with one hand, forcing her eyes to water as he dictates every breath."
             ],
             2: [
-                "Male Dom brings the female sub to the brink of her own pleasure before forcing a sudden stop.",
-                "Male Dom commands the sub to focus entirely on her breathing and vocalize her release.",
-                "Male Dom applies intense physical teasing to the female sub right as the male approaches his edge.",
-                "Male Dom forces a sudden pause mid-stroke, demanding the sub relax her jaw and breathe out."
+                "Male Dom catches his pre-cum leakage on his fingers and smears it across the sub's face and lips.",
+                "Male Dom forces a cruel, sudden deepthroat right at the absolute peak of his frustration build.",
+                "Male Dom spits into a glass, mixes it with any leakage, and commands the sub to chug it down as punishment.",
+                "Male Dom forces the sub down onto all fours, treating her body purely as an object for his release."
             ],
             3: [
-                "Male Dom prepares the final climax protocol, directing the sub's attention entirely to his strokes.",
-                "Male Dom delivers one final dominant command and rewards the sub with intense aftercare focus.",
-                "Male Dom grips the sub securely, commanding her to relax and let go as he approaches the final decree.",
-                "Male Dom commands the sub to get into position and receive his final ruling."
+                "Male Dom prepares a degrading fluid mix and forces the sub to swallow it as the ultimate final test.",
+                "Male Dom delivers one final humiliating slap and spits onto the sub's face to seal her submission.",
+                "Male Dom grips the sub's throat to the edge of suffocation right before executing his final decree.",
+                "Male Dom commands the sub to lick clean every single trace of mess from his skin."
             ]
         };
 
@@ -425,19 +425,19 @@
             const btn = document.getElementById('action-btn');
 
             if (currentStep === 0) {
-                instruction.textContent = "Female sub's setup: Tap to see how she is restrained and prepared:";
-                btn.textContent = "Roll Sub's Restraints";
+                instruction.textContent = "Female sub's degradation setup: Tap to see how stripped of dignity she is:";
+                btn.textContent = "Roll Sub's Placement";
             } else if (currentStep === 1) {
-                instruction.textContent = "Male Dom's turn to tap. Let's see what action he is permitted to inflict:";
+                instruction.textContent = "Male Dom's turn to tap. Let's see what degrading action he is permitted to inflict:";
                 btn.textContent = "Roll Dom Action";
             } else if (currentStep === 2) {
-                instruction.textContent = "Third roll: Setting the final decree and climax rules for the male:";
+                instruction.textContent = "Third roll: Setting the final decree and humiliation rules for the male:";
                 btn.textContent = "Roll Session Decree";
             } else if (currentStep === 3) {
-                instruction.textContent = "Final roll: Unlocking the special game element for the session:";
+                instruction.textContent = "Final roll: Unlocking the special sadistic game element for the session:";
                 btn.textContent = "Roll Special Element";
             } else {
-                instruction.textContent = "Rules locked in. Ready to begin?";
+                instruction.textContent = "Rules locked in. Accept your lower place and submit.";
                 btn.textContent = "Launch Pleasure Engine";
                 btn.onclick = launchMainEvent;
             }
@@ -452,7 +452,7 @@
 
             if (currentStep === 0) {
                 sessionResults.subAttire = getRandomItem(subAttirePool);
-                logDiv.innerHTML = `<p><strong>Sub Setup:</strong> ${sessionResults.subAttire}</p>`;
+                logDiv.innerHTML = `<p><strong>Sub Placement:</strong> ${sessionResults.subAttire}</p>`;
             } else if (currentStep === 1) {
                 sessionResults.domAction = getRandomItem(domActionsPool);
                 logDiv.innerHTML += `<p><strong>Dom Action:</strong> ${sessionResults.domAction}</p>`;
@@ -478,24 +478,24 @@
         let loggedEdges = 0;
 
         const actionSequence = [
-            { section: 0, stageName: "Stage 1: Conditioning", text: "Slow, agonizingly light strokes. Female sub lets out soft breaths to relax.", duration: 45, bpm: 35, instructions: "Match rhythm: Slow and controlled pressure." },
-            { section: 0, stageName: "Stage 1: Conditioning", text: "HALT! Absolute stillness. Exhale completely and relax your body.", duration: 25, bpm: 0, instructions: "Freeze completely. Do not move." },
-            { section: 0, stageName: "Stage 1: Conditioning", text: "Resume ultra-slow gliding friction. Focus on vocalizing soft sighs and letting go.", duration: 45, bpm: 40, instructions: "Drag it out smoothly." },
-            { section: 0, stageName: "Stage 1: Conditioning", text: "Brief stop. Deep breath. Let tension melt away.", duration: 15, bpm: 0, instructions: "Stillness protocol active." },
-            { section: 0, stageName: "Stage 1: Conditioning", text: "Medium steady pace. Let go of tension with every exhale.", duration: 60, bpm: 75, instructions: "Steady mid-speed rhythm." },
+            { section: 0, stageName: "Stage 1: Conditioning", text: "Slow, agonizingly long friction controlled entirely by his pleasure.", duration: 45, bpm: 35, instructions: "Sub must accept every slow, torturous inch." },
+            { section: 0, stageName: "Stage 1: Conditioning", text: "HALT! He locks his shaft completely still inside your mouth or grasp. Absolute stillness.", duration: 25, bpm: 0, instructions: "Do not twitch or move a muscle." },
+            { section: 0, stageName: "Stage 1: Conditioning", text: "He resumes ultra-slow, humiliating gliding friction.", duration: 45, bpm: 40, instructions: "Endure the slow torture." },
+            { section: 0, stageName: "Stage 1: Conditioning", text: "Brief stop. He rests his weight heavy against you.", duration: 15, bpm: 0, instructions: "Stillness protocol active." },
+            { section: 0, stageName: "Stage 1: Conditioning", text: "He sets a steady, medium-speed rhythm to build his heat at your expense.", duration: 60, bpm: 75, instructions: "Serve his pacing." },
 
-            { section: 1, stageName: "Stage 2: Escalation", text: "Pick up the speed. Firm, rhythmic friction building fast.", duration: 40, bpm: 100, instructions: "Consistent faster tempo." },
-            { section: 1, stageName: "Stage 2: Escalation", text: "SUDDEN FREEZE! Hold still. Make a sound to release the building heat.", duration: 25, bpm: 0, instructions: "Instant freeze command." },
-            { section: 1, stageName: "Stage 2: Escalation", text: "Fast short burst of speed—then instant stop!", duration: 15, bpm: 135, instructions: "Rapid bursts on the bar!" },
-            { section: 1, stageName: "Stage 2: Escalation", text: "Slow down immediately. Torturous, dragging strokes.", duration: 50, bpm: 35, instructions: "Drop back to agonizing slow." },
-            { section: 1, stageName: "Stage 2: Escalation", text: "Rhythmic mid-speed stimulation. Stay controlled and vocalize.", duration: 50, bpm: 80, instructions: "Find the groove." },
-            { section: 1, stageName: "Stage 2: Escalation", text: "Hold completely still. Let the sensitivity spike while breathing deep.", duration: 20, bpm: 0, instructions: "No motion allowed." },
+            { section: 1, stageName: "Stage 2: Escalation", text: "He accelerates into a firm, aggressive, punishing rhythm.", duration: 40, bpm: 100, instructions: "Faster tempo driven entirely by his desires." },
+            { section: 1, stageName: "Stage 2: Escalation", text: "SUDDEN FREEZE! He locks his position in place, demanding total submission.", duration: 25, bpm: 0, instructions: "Instant freeze command." },
+            { section: 1, stageName: "Stage 2: Escalation", text: "He delivers a fast, short burst of speed—then an instant dead stop!", duration: 15, bpm: 135, instructions: "Intense rapid bursts!" },
+            { section: 1, stageName: "Stage 2: Escalation", text: "He drops back immediately to agonizingly slow, dragging strokes.", duration: 50, bpm: 35, instructions: "Cruel slow down." },
+            { section: 1, stageName: "Stage 2: Escalation", text: "He maintains a strict, rhythmic mid-speed stroke, treating you as an object.", duration: 50, bpm: 80, instructions: "Stay locked in." },
+            { section: 1, stageName: "Stage 2: Escalation", text: "He freezes the motion entirely to let your frustration and desperation spike.", duration: 20, bpm: 0, instructions: "No motion allowed." },
 
-            { section: 2, stageName: "Stage 3: Peak & Edging", text: "Fast, intense rhythm pushing right to the brink!", duration: 35, bpm: 130, instructions: "Hard, fast pace!" },
-            { section: 2, stageName: "Stage 3: Peak & Edging", text: "EDGE AND HOLD! Freeze right at the edge! Let out a deep groan or sigh to relax.", duration: 25, bpm: 0, instructions: "Hold the edge under strict control." },
-            { section: 2, stageName: "Stage 3: Peak & Edging", text: "Cruel slow down right after the edge. Tease the drop.", duration: 35, bpm: 30, instructions: "Barely touching to survive the wave." },
-            { section: 2, stageName: "Stage 3: Peak & Edging", text: "Rapid-fire fast bursts with sudden dead stops!", duration: 25, bpm: 150, instructions: "Intense peak tempo." },
-            { section: 2, stageName: "Stage 3: Peak & Edging", text: "FINAL EDGE HOLD. Lock it in place. Await the Dom's ruling.", duration: 40, bpm: 140, instructions: "Final stillness test." },
+            { section: 2, stageName: "Stage 3: Peak & Edging", text: "He drives fast, punishing strokes right to his absolute brink!", duration: 35, bpm: 130, instructions: "Hard, fast rhythm dictated by his climax!" },
+            { section: 2, stageName: "Stage 3: Peak & Edging", text: "EDGE AND HOLD! He forces you to freeze right on his edge!", duration: 25, bpm: 0, instructions: "Hold the edge under strict dominance." },
+            { section: 2, stageName: "Stage 3: Peak & Edging", text: "Cruel slow down right after his edge. He teases the drop.", duration: 35, bpm: 30, instructions: "Barely touching to survive." },
+            { section: 2, stageName: "Stage 3: Peak & Edging", text: "He unleashes rapid-fire fast bursts with sudden dead stops!", duration: 25, bpm: 150, instructions: "Intense peak tempo." },
+            { section: 2, stageName: "Stage 3: Peak & Edging", text: "FINAL EDGE BUILD. He pushes hard to his absolute limit using your body.", duration: 40, bpm: 140, instructions: "Comply with rule requirements." },
 
             { section: 3, stageName: "Stage 4: Final Decree", text: "Session finale. Awaiting final ruling execution.", duration: 15, bpm: 0, instructions: "Execution phase." }
         ];
@@ -520,7 +520,7 @@
         function updateTaskBoxText() {
             let edgeStatus = requiredEdgeCount > 0 ? `<br><strong>Edge Requirement:</strong> ${loggedEdges}/${requiredEdgeCount} completed` : "";
             document.getElementById('task-text').innerHTML = 
-                `<strong>Sub Setup:</strong> ${sessionResults.subAttire}<br>` +
+                `<strong>Sub Placement:</strong> ${sessionResults.subAttire}<br>` +
                 `<strong>Permitted Action:</strong> ${sessionResults.domAction}<br>` +
                 `<strong>Special Directive:</strong> ${sessionResults.specialElement}` +
                 edgeStatus;
@@ -614,7 +614,7 @@
             if (bpm <= 0) {
                 vertBar.style.transition = 'none';
                 vertBar.style.height = '0%';
-                tempoLabel.textContent = "TEMPO: FREEZE / BREATHE";
+                tempoLabel.textContent = "TEMPO: FREEZE / SUBMIT";
                 return;
             }
 
@@ -666,7 +666,7 @@
             loadAction(nextIndex);
         }
 
-        // Dom Action Selector: Non-repeating, Male-Dom to Female-Sub logic
+        // Dom Action Selector: Non-repeating, explicit degrading logic
         function triggerDomAction() {
             const fullPool = domActionPools[currentSectionId] || domActionPools[0];
             let usedList = usedDomActions[currentSectionId];
@@ -695,7 +695,7 @@
                 <h3 class="prompt-title" style="color: var(--accent-pink);">Session Complete</h3>
                 <p>Final Ruling: <strong>${sessionResults.step3Result}</strong></p>
                 <p><em>Edge Check:</em> Completed ${loggedEdges} of ${requiredEdgeCount} required edges.</p>
-                <p><em>Aftercare note:</em> Ensure proper affection, cuddles, and care are given to her now.</p>
+                <p><em>Outcome note:</em> You served your purpose as his toy—remain in position until he dismisses you.</p>
                 <p style="margin-top: 15px;">Execute final protocol.</p>
                 <button onclick="location.reload()">Start New Session</button>
             `;
