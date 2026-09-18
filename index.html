@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette Decree & Pleasure Engine</title>
+    <style>
+        :root {
+            --bg-deep: #0a0508;
+            --bg-card: #160a12;
+            --accent-pink: #ff2a75;
+            --accent-purple: #9d00ff;
+            --accent-teal: #00f0ff;
+            --text-main: #f5f0f3;
+            --text-muted: #b0a4ac;
+            --danger: #ff0055;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 0 25px rgba(157, 0, 255, 0.25), inset 0 0 15px rgba(255, 42, 117, 0.1);
+            border: 1px solid rgba(255, 42, 117, 0.3);
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            color: var(--accent-pink);
+            margin-top: 0;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(255, 42, 117, 0.5);
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 8px 0;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(255, 42, 117, 0.4);
+            transition: transform 0.1s, filter 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button:hover {
+            filter: brightness(1.15);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #0077ff, var(--accent-teal));
+            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+            color: #000;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff0055, #880022);
+            box-shadow: 0 4px 15px rgba(255, 0, 85, 0.4);
+        }
+
+        .display-box {
+            margin-top: 15px;
+            text-align: left;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            min-height: 80px;
+        }
+
+        .display-box p {
+            margin: 6px 0;
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .prompt-title {
+            color: var(--accent-teal);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        /* Main Event Mobile UI */
+        .command-display {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #fff;
+            margin: 10px 0;
+            min-height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            border: 2px solid var(--accent-pink);
+            padding: 8px;
+            text-align: center;
+            text-shadow: 0 0 12px var(--accent-pink);
+        }
+
+        /* Vertical Metronome Bar Layout */
+        .metronome-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .vert-bar-track {
+            width: 24px;
+            height: 140px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .vert-bar-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(to top, var(--accent-purple), var(--accent-pink));
+            box-shadow: 0 0 15px var(--accent-pink);
+            transition: height linear; 
+        }
+
+        .metronome-info {
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .action-timer {
+            font-size: 1rem;
+            color: var(--accent-teal);
+            margin-top: 4px;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+        }
+
+        .task-alert-box {
+            background: rgba(255, 0, 85, 0.15);
+            border: 1px solid var(--danger);
+            color: #ffb8b8;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 8px 0;
+            font-size: 0.8rem;
+            text-align: left;
+        }
+
+        .meter-container {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 8px;
+            margin: 8px 0;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .meter-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink));
+            transition: width 1s linear;
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .controls-row button {
+            margin: 0;
+            font-size: 0.8rem;
+            padding: 10px 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Roulette Decree</h2>
+        
+        <!-- SETUP PHASE -->
+        <div id="game-intro">
+            <p>Ready to let fate dictate the session? Hand over control and let the rules guide her pleasure.</p>
+            <button onclick="startSequence()">Let's Play</button>
+        </div>
+
+        <div id="game-sequence" class="hidden">
+            <p id="instruction-text" class="prompt-title"></p>
+            <button id="action-btn" onclick="nextStep()">Press to Roll</button>
+            
+            <div class="display-box" id="results-log">
+                <p><em>Waiting for the first roll...</em></p>
+            </div>
+        </div>
+
+        <!-- MAIN EVENT PHASE -->
+        <div id="main-event-screen" class="hidden">
+            <h3 id="stage-title" class="prompt-title" style="color: var(--accent-pink); margin: 0 0 3px 0;">Stage 1</h3>
+            <p id="stage-instructions" style="font-size: 0.78rem; color: var(--text-muted); margin: 0 0 8px 0;"></p>
+            
+            <div class="command-display" id="live-command">PREPARING...</div>
+            
+            <!-- Vertical Pumping Metronome Visualizer -->
+            <div class="metronome-container">
+                <div class="vert-bar-track">
+                    <div class="vert-bar-fill" id="vert-bar"></div>
+                </div>
+                <div class="metronome-info">
+                    <span id="tempo-label" style="font-size: 0.8rem; font-weight: bold; color: #fff; letter-spacing: 0.5px;">TEMPO: SYNCING</span>
+                    <div class="action-timer" id="action-timer-display">Action: 0s</div>
+                </div>
+            </div>
+
+            <!-- Automated or Triggered Roulette Tasks -->
+            <div class="task-alert-box" id="active-task-box">
+                <strong>Active Directives:</strong><br>
+                <span id="task-text">Awaiting phase triggers...</span>
+            </div>
+            
+            <div class="meter-container">
+                <div class="meter-bar" id="progress-bar"></div>
+            </div>
+            
+            <p id="total-timer-display" style="font-weight: bold; font-size: 0.8rem; color: var(--text-muted); margin: 4px 0;">Total Session Time Left: 10:00</p>
+            
+            <div class="controls-row">
+                <button class="btn-secondary" onclick="previewDecree()">Dom Prep</button>
+                <button class="btn-danger" onclick="skipStage()">Skip Action ➔</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const subAttirePool = [
+            "Spread-eagled and bound with cuffs", 
+            "Completely bare, exposed, and vulnerable", 
+            "Locked in position with heavy bondage", 
+            "Collared, restrained, and awaiting orders"
+        ];
+
+        const domActionsPool = [
+            "Heavy tongue play and intense oral focus", 
+            "Vibrator / toy torture and teasing", 
+            "Spanking and tactile sensory impact play", 
+            "Forced deep breathing and sensory overload"
+        ];
+
+        const step3Pool = [
+            "Allowed 1 full, powerful, overwhelming orgasm", 
+            "Strictly ruined & denied completely by the Dom", 
+            "Edge-fed only (permitted right at the final second)", 
+            "Edged 3 times in a row, then fully permitted"
+        ];
+
+        const specialGameElementPool = [
+            "Mandatory absolute stillness command during peak sensitivity", 
+            "Forced sudden pause mid-pleasure", 
+            "Immediate sensory deprivation or blindfold trigger", 
+            "Forced submission speech check"
+        ];
+
+        let currentStep = 0;
+        let sessionResults = {
+            subAttire: "",
+            domAction: "",
+            step3Result: "",
+            specialElement: ""
+        };
+
+        function startSequence() {
+            document.getElementById('game-intro').classList.add('hidden');
+            document.getElementById('game-sequence').classList.remove('hidden');
+            updateStepPrompt();
+        }
+
+        function updateStepPrompt() {
+            const instruction = document.getElementById('instruction-text');
+            const btn = document.getElementById('action-btn');
+
+            if (currentStep === 0) {
+                instruction.textContent = "Sub's position: Tap to see how she is restrained and prepared:";
+                btn.textContent = "Roll Sub's Restraints";
+            } else if (currentStep === 1) {
+                instruction.textContent = "Dom's turn to tap. Let's see what action the male is permitted to inflict:";
+                btn.textContent = "Roll Dom Action";
+            } else if (currentStep === 2) {
+                instruction.textContent = "Third roll: Setting the final decree and climax rules:";
+                btn.textContent = "Roll Session Decree";
+            } else if (currentStep === 3) {
+                instruction.textContent = "Final roll: Unlocking the special game element for the session:";
+                btn.textContent = "Roll Special Element";
+            } else {
+                instruction.textContent = "Rules locked in. Ready to begin?";
+                btn.textContent = "Launch Pleasure Engine";
+                btn.onclick = launchMainEvent;
+            }
+        }
+
+        function getRandomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function nextStep() {
+            const logDiv = document.getElementById('results-log');
+
+            if (currentStep === 0) {
+                sessionResults.subAttire = getRandomItem(subAttirePool);
+                logDiv.innerHTML = `<p><strong>Sub Setup:</strong> ${sessionResults.subAttire}</p>`;
+            } else if (currentStep === 1) {
+                sessionResults.domAction = getRandomItem(domActionsPool);
+                logDiv.innerHTML += `<p><strong>Dom Action:</strong> ${sessionResults.domAction}</p>`;
+            } else if (currentStep === 2) {
+                sessionResults.step3Result = getRandomItem(step3Pool);
+                logDiv.innerHTML += `<p><strong>Session Decree:</strong> ${sessionResults.step3Result}</p>`;
+            } else if (currentStep === 3) {
+                sessionResults.specialElement = getRandomItem(specialGameElementPool);
+                logDiv.innerHTML += `<p><strong>Special Element:</strong> ${sessionResults.specialElement}</p>`;
+            }
+
+            currentStep++;
+            updateStepPrompt();
+        }
+
+        // --- 10-MIN ENGINE WITH VERTICAL METRONOME ---
+        let totalSessionSeconds = 600;
+        let globalTimer;
+        let currentActionIndex = 0;
+        let actionTimeLeft = 0;
+        let vertPumpInterval = null;
+
+        const actionSequence = [
+            { stageName: "Stage 1: Conditioning", text: "Slow, agonizingly light touches. Building anticipation.", duration: 40, bpm: 35, instructions: "Match rhythm: Slow and controlled pressure." },
+            { stageName: "Stage 1: Conditioning", text: "HALT! Absolute stillness. Hands off completely.", duration: 20, bpm: 0, instructions: "Freeze completely. Do not move." },
+            { stageName: "Stage 1: Conditioning", text: "Resume ultra-slow gliding friction. Savor every second.", duration: 45, bpm: 40, instructions: "Drag it out smoothly." },
+            { stageName: "Stage 1: Conditioning", text: "Brief stop. Deep breath. Do not touch.", duration: 15, bpm: 0, instructions: "Stillness protocol active." },
+            { stageName: "Stage 1: Conditioning", text: "Medium steady pace. Building warmth and sensitivity.", duration: 60, bpm: 75, instructions: "Steady mid-speed rhythm." },
+
+            { stageName: "Stage 2: Escalation", text: "Pick up the speed. Firm, rhythmic friction building fast.", duration: 40, bpm: 100, instructions: "Consistent faster tempo." },
+            { stageName: "Stage 2: Escalation", text: "SUDDEN FREEZE! Hold still. Wait and submit.", duration: 25, bpm: 0, instructions: "Instant freeze command." },
+            { stageName: "Stage 2: Escalation", text: "Fast short burst of speed—then instant stop!", duration: 15, bpm: 135, instructions: "Rapid bursts on the bar!" },
+            { stageName: "Stage 2: Escalation", text: "Slow down immediately. Torturous, dragging strokes.", duration: 50, bpm: 35, instructions: "Drop back to agonizing slow." },
+            { stageName: "Stage 2: Escalation", text: "Rhythmic mid-speed stimulation. Stay controlled.", duration: 50, bpm: 80, instructions: "Find the groove." },
+            { stageName: "Stage 2: Escalation", text: "Hold completely still. Let the sensitivity spike.", duration: 20, bpm: 0, instructions: "No motion allowed." },
+
+            { stageName: "Stage 3: Peak & Edging", text: "Fast, intense rhythm pushing right to the brink!", duration: 30, bpm: 130, instructions: "Hard, fast pace!" },
+            { stageName: "Stage 3: Peak & Edging", text: "EDGE AND HOLD! Freeze right at the edge!", duration: 20, bpm: 0, instructions: "Hold the edge without letting her over." },
+            { stageName: "Stage 3: Peak & Edging", text: "Cruel slow down right after the edge. Tease the drop.", duration: 35, bpm: 30, instructions: "Barely touching to survive the wave." },
+            { stageName: "Stage 3: Peak & Edging", text: "Rapid-fire fast bursts with sudden dead stops!", duration: 20, bpm: 150, instructions: "Intense peak tempo." },
+            { stageName: "Stage 3: Peak & Edging", text: "FINAL EDGE HOLD. Lock it in place. Await the Dom's ruling.", duration: 35, bpm: 0, instructions: "Final stillness test." }
+        ];
+
+        function launchMainEvent() {
+            document.getElementById('game-sequence').classList.add('hidden');
+            document.getElementById('main-event-screen').classList.remove('hidden');
+            
+            document.getElementById('task-text').innerHTML = 
+                `<strong>Sub Setup:</strong> ${sessionResults.subAttire}<br>` +
+                `<strong>Permitted Action:</strong> ${sessionResults.domAction}<br>` +
+                `<strong>Special Directive:</strong> ${sessionResults.specialElement}`;
+
+            loadAction(0);
+            startGlobalClock();
+        }
+
+        function startGlobalClock() {
+            globalTimer = setInterval(() => {
+                if (totalSessionSeconds > 0) {
+                    totalSessionSeconds--;
+                    let mins = Math.floor(totalSessionSeconds / 60);
+                    let secs = totalSessionSeconds % 60;
+                    document.getElementById('total-timer-display').textContent = 
+                        `Total Session Time Left: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+
+                    let progressPercent = ((600 - totalSessionSeconds) / 600) * 100;
+                    document.getElementById('progress-bar').style.width = progressPercent + '%';
+                }
+            }, 1000);
+        }
+
+        function loadAction(index) {
+            if (index >= actionSequence.length || totalSessionSeconds <= 0) {
+                endGameSession();
+                return;
+            }
+            currentActionIndex = index;
+            const currentAction = actionSequence[currentActionIndex];
+
+            document.getElementById('stage-title').textContent = currentAction.stageName;
+            document.getElementById('stage-instructions').textContent = currentAction.instructions;
+            document.getElementById('live-command').textContent = currentAction.text;
+            
+            actionTimeLeft = currentAction.duration;
+            runActionTimer();
+            setupVerticalMetronome(currentAction.bpm);
+        }
+
+        let actionTimer;
+        function runActionTimer() {
+            clearInterval(actionTimer);
+
+            actionTimer = setInterval(() => {
+                actionTimeLeft--;
+                document.getElementById('action-timer-display').textContent = `Action: ${actionTimeLeft}s`;
+
+                if (actionTimeLeft <= 0) {
+                    clearInterval(actionTimer);
+                    loadAction(currentActionIndex + 1);
+                }
+            }, 1000);
+        }
+
+        function setupVerticalMetronome(bpm) {
+            clearInterval(vertPumpInterval);
+            const vertBar = document.getElementById('vert-bar');
+            const tempoLabel = document.getElementById('tempo-label');
+
+            if (bpm <= 0) {
+                vertBar.style.transition = 'none';
+                vertBar.style.height = '0%';
+                tempoLabel.textContent = "TEMPO: FREEZE";
+                return;
+            }
+
+            const strokeDurationMs = (60 / bpm) * 1000;
+            tempoLabel.textContent = `TEMPO: ${bpm} BPM`;
+
+            vertBar.style.transition = `height ${strokeDurationMs / 2}ms ease-in-out`;
+
+            let isUp = false;
+            vertBar.style.height = '100%';
+            isUp = true;
+
+            vertPumpInterval = setInterval(() => {
+                if (isUp) {
+                    vertBar.style.height = '0%';
+                    isUp = false;
+                } else {
+                    vertBar.style.height = '100%';
+                    isUp = true;
+                }
+            }, strokeDurationMs / 2);
+        }
+
+        function skipStage() {
+            clearInterval(actionTimer);
+            clearInterval(vertPumpInterval);
+            loadAction(currentActionIndex + 1);
+        }
+
+        function previewDecree() {
+            alert(`DOM PREPARATION INFO:\n\n` +
+                  `- Sub Setup: ${sessionResults.subAttire}\n` +
+                  `- Permitted Action: ${sessionResults.domAction}\n` +
+                  `- Special Element: ${sessionResults.specialElement}\n` +
+                  `- Final Decree: ${sessionResults.step3Result}\n\n` +
+                  `Prepare any necessary toys, oils, or comfort items right now.`);
+        }
+
+        function endGameSession() {
+            clearInterval(globalTimer);
+            clearInterval(actionTimer);
+            clearInterval(vertPumpInterval);
+            document.getElementById('main-event-screen').innerHTML = `
+                <h3 class="prompt-title" style="color: var(--accent-pink);">Session Complete</h3>
+                <p>Final Ruling: <strong>${sessionResults.step3Result}</strong></p>
+                <p><em>Aftercare note:</em> Ensure proper attention and care are given to her now.</p>
+                <p style="margin-top: 15px;">Execute final protocol.</p>
+                <button onclick="location.reload()">Start New Session</button>
+            `;
+        }
+    </script>
+
+</body>
+</html>
