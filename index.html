@@ -57,21 +57,28 @@
             line-height: 1.4;
         }
 
-        button {
+        button, select {
             background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
             color: white;
             border: none;
-            padding: 14px 24px;
-            font-size: 1rem;
+            padding: 12px 20px;
+            font-size: 0.95rem;
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
-            margin: 8px 0;
+            margin: 6px 0;
             width: 100%;
             box-shadow: 0 4px 15px rgba(255, 42, 117, 0.4);
             transition: transform 0.1s, filter 0.2s;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            box-sizing: border-box;
+        }
+
+        select {
+            background: #1f0d1b;
+            border: 1px solid var(--accent-pink);
+            text-align-last: center;
         }
 
         button:active {
@@ -217,14 +224,14 @@
 
         .controls-row {
             display: flex;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 6px;
+            margin-top: 6px;
         }
 
         .controls-row button {
             margin: 0;
-            font-size: 0.8rem;
-            padding: 10px 8px;
+            font-size: 0.75rem;
+            padding: 10px 4px;
         }
     </style>
 </head>
@@ -235,7 +242,7 @@
         
         <!-- SETUP PHASE -->
         <div id="game-intro">
-            <p>Ready to let fate dictate the session? Hand over control and let the rules guide her pleasure.</p>
+            <p>Ready to let fate dictate the session? Hand over control and let the rules guide her pleasure and vocal relaxation.</p>
             <button onclick="startSequence()">Let's Play</button>
         </div>
 
@@ -278,9 +285,15 @@
             
             <p id="total-timer-display" style="font-weight: bold; font-size: 0.8rem; color: var(--text-muted); margin: 4px 0;">Total Session Time Left: 10:00</p>
             
+            <!-- Section Jump Dropdown -->
+            <select id="section-jump-select" onchange="jumpToSelectedSection()">
+                <option value="" disabled selected>Jump to Section...</option>
+            </select>
+
             <div class="controls-row">
                 <button class="btn-secondary" onclick="previewDecree()">Dom Prep</button>
-                <button class="btn-danger" onclick="skipStage()">Skip Action ➔</button>
+                <button onclick="skipAction()">Skip Action ➔</button>
+                <button class="btn-danger" onclick="skipSection()">Skip Section ⏭</button>
             </div>
         </div>
 
@@ -310,9 +323,9 @@
 
         const specialGameElementPool = [
             "Mandatory absolute stillness command during peak sensitivity", 
-            "Forced sudden pause mid-pleasure", 
+            "Forced sudden pause mid-pleasure with deep exhales", 
             "Immediate sensory deprivation or blindfold trigger", 
-            "Forced submission speech check"
+            "Forced vocal release and relaxation sighs check"
         ];
 
         let currentStep = 0;
@@ -377,45 +390,77 @@
             updateStepPrompt();
         }
 
-        // --- 10-MIN ENGINE WITH VERTICAL METRONOME ---
+        // --- 10-MIN ENGINE WITH SECTIONS & EDGING ENFORCEMENT ---
         let totalSessionSeconds = 600;
         let globalTimer;
         let currentActionIndex = 0;
         let actionTimeLeft = 0;
         let vertPumpInterval = null;
+        let edgeCount = 0;
+        let requiredEdges = 1; // Default or parsed from decree
 
         const actionSequence = [
-            { stageName: "Stage 1: Conditioning", text: "Slow, agonizingly light touches. Building anticipation.", duration: 40, bpm: 35, instructions: "Match rhythm: Slow and controlled pressure." },
-            { stageName: "Stage 1: Conditioning", text: "HALT! Absolute stillness. Hands off completely.", duration: 20, bpm: 0, instructions: "Freeze completely. Do not move." },
-            { stageName: "Stage 1: Conditioning", text: "Resume ultra-slow gliding friction. Savor every second.", duration: 45, bpm: 40, instructions: "Drag it out smoothly." },
-            { stageName: "Stage 1: Conditioning", text: "Brief stop. Deep breath. Do not touch.", duration: 15, bpm: 0, instructions: "Stillness protocol active." },
-            { stageName: "Stage 1: Conditioning", text: "Medium steady pace. Building warmth and sensitivity.", duration: 60, bpm: 75, instructions: "Steady mid-speed rhythm." },
+            // Section 0: Conditioning
+            { sectionId: 0, sectionName: "Section 1: Conditioning", text: "Slow, agonizingly light touches. Let out soft breaths to relax.", duration: 40, bpm: 35, instructions: "Match rhythm: Slow and controlled pressure." },
+            { sectionId: 0, sectionName: "Section 1: Conditioning", text: "HALT! Absolute stillness. Exhale completely and relax your body.", duration: 20, bpm: 0, instructions: "Freeze completely. Do not move." },
+            { sectionId: 0, sectionName: "Section 1: Conditioning", text: "Resume ultra-slow gliding friction. Focus on vocalizing soft sighs.", duration: 45, bpm: 40, instructions: "Drag it out smoothly." },
+            { sectionId: 0, sectionName: "Section 1: Conditioning", text: "Medium steady pace. Let go of tension with every exhale.", duration: 60, bpm: 75, instructions: "Steady mid-speed rhythm." },
 
-            { stageName: "Stage 2: Escalation", text: "Pick up the speed. Firm, rhythmic friction building fast.", duration: 40, bpm: 100, instructions: "Consistent faster tempo." },
-            { stageName: "Stage 2: Escalation", text: "SUDDEN FREEZE! Hold still. Wait and submit.", duration: 25, bpm: 0, instructions: "Instant freeze command." },
-            { stageName: "Stage 2: Escalation", text: "Fast short burst of speed—then instant stop!", duration: 15, bpm: 135, instructions: "Rapid bursts on the bar!" },
-            { stageName: "Stage 2: Escalation", text: "Slow down immediately. Torturous, dragging strokes.", duration: 50, bpm: 35, instructions: "Drop back to agonizing slow." },
-            { stageName: "Stage 2: Escalation", text: "Rhythmic mid-speed stimulation. Stay controlled.", duration: 50, bpm: 80, instructions: "Find the groove." },
-            { stageName: "Stage 2: Escalation", text: "Hold completely still. Let the sensitivity spike.", duration: 20, bpm: 0, instructions: "No motion allowed." },
+            // Section 1: Escalation
+            { sectionId: 1, sectionName: "Section 2: Escalation", text: "Pick up the speed. Firm, rhythmic friction building fast.", duration: 40, bpm: 100, instructions: "Consistent faster tempo." },
+            { sectionId: 1, sectionName: "Section 2: Escalation", text: "SUDDEN FREEZE! Hold still. Make a sound to release the building heat.", duration: 25, bpm: 0, instructions: "Instant freeze command." },
+            { sectionId: 1, sectionName: "Section 2: Escalation", text: "Fast short burst of speed—then instant stop!", duration: 15, bpm: 135, instructions: "Rapid bursts on the bar!" },
+            { sectionId: 1, sectionName: "Section 2: Escalation", text: "Slow down immediately. Torturous, dragging strokes.", duration: 50, bpm: 35, instructions: "Drop back to agonizing slow." },
 
-            { stageName: "Stage 3: Peak & Edging", text: "Fast, intense rhythm pushing right to the brink!", duration: 30, bpm: 130, instructions: "Hard, fast pace!" },
-            { stageName: "Stage 3: Peak & Edging", text: "EDGE AND HOLD! Freeze right at the edge!", duration: 20, bpm: 0, instructions: "Hold the edge without letting her over." },
-            { stageName: "Stage 3: Peak & Edging", text: "Cruel slow down right after the edge. Tease the drop.", duration: 35, bpm: 30, instructions: "Barely touching to survive the wave." },
-            { stageName: "Stage 3: Peak & Edging", text: "Rapid-fire fast bursts with sudden dead stops!", duration: 20, bpm: 150, instructions: "Intense peak tempo." },
-            { stageName: "Stage 3: Peak & Edging", text: "FINAL EDGE HOLD. Lock it in place. Await the Dom's ruling.", duration: 35, bpm: 0, instructions: "Final stillness test." }
+            // Section 2: Peak & Edging
+            { sectionId: 2, sectionName: "Section 3: Peak & Edging", text: "Fast, intense rhythm pushing right to the brink!", duration: 30, bpm: 130, instructions: "Hard, fast pace!" },
+            { sectionId: 2, sectionName: "Section 3: Peak & Edging", text: "EDGE AND HOLD! Freeze right at the edge! Let out a deep groan or sigh to relax.", duration: 25, bpm: 0, instructions: "Hold the edge without letting her over." },
+            { sectionId: 2, sectionName: "Section 3: Peak & Edging", text: "Cruel slow down right after the edge. Tease the drop.", duration: 35, bpm: 30, instructions: "Barely touching to survive the wave." },
+            { sectionId: 2, sectionName: "Section 3: Peak & Edging", text: "FINAL EDGE HOLD. Lock it in place. Await the Dom's ruling.", duration: 35, bpm: 0, instructions: "Final stillness test." }
         ];
+
+        function parseDecreeRules() {
+            if (sessionResults.step3Result.includes("Edged 3 times")) {
+                requiredEdges = 3;
+            } else if (sessionResults.step3Result.includes("Edge-fed only") || sessionResults.step3Result.includes("1 full")) {
+                requiredEdges = 1;
+            } else {
+                requiredEdges = 0;
+            }
+        }
 
         function launchMainEvent() {
             document.getElementById('game-sequence').classList.add('hidden');
             document.getElementById('main-event-screen').classList.remove('hidden');
             
+            parseDecreeRules();
+
             document.getElementById('task-text').innerHTML = 
                 `<strong>Sub Setup:</strong> ${sessionResults.subAttire}<br>` +
                 `<strong>Permitted Action:</strong> ${sessionResults.domAction}<br>` +
-                `<strong>Special Directive:</strong> ${sessionResults.specialElement}`;
+                `<strong>Special Directive:</strong> ${sessionResults.specialElement}<br>` +
+                `<strong>Required Edges:</strong> ${requiredEdges}`;
 
+            populateSectionDropdown();
             loadAction(0);
             startGlobalClock();
+        }
+
+        function populateSectionDropdown() {
+            const select = document.getElementById('section-jump-select');
+            select.innerHTML = '<option value="" disabled selected>Jump to Section...</option>';
+            
+            // Extract unique sections
+            let seenSections = new Set();
+            actionSequence.forEach((act, idx) => {
+                if (!seenSections.has(act.sectionId)) {
+                    seenSections.add(act.sectionId);
+                    let opt = document.createElement('option');
+                    opt.value = idx;
+                    opt.textContent = act.sectionName;
+                    select.appendChild(opt);
+                }
+            });
         }
 
         function startGlobalClock() {
@@ -429,6 +474,8 @@
 
                     let progressPercent = ((600 - totalSessionSeconds) / 600) * 100;
                     document.getElementById('progress-bar').style.width = progressPercent + '%';
+                } else {
+                    endGameSession();
                 }
             }, 1000);
         }
@@ -441,7 +488,7 @@
             currentActionIndex = index;
             const currentAction = actionSequence[currentActionIndex];
 
-            document.getElementById('stage-title').textContent = currentAction.stageName;
+            document.getElementById('stage-title').textContent = currentAction.sectionName;
             document.getElementById('stage-instructions').textContent = currentAction.instructions;
             document.getElementById('live-command').textContent = currentAction.text;
             
@@ -460,9 +507,60 @@
 
                 if (actionTimeLeft <= 0) {
                     clearInterval(actionTimer);
-                    loadAction(currentActionIndex + 1);
+                    checkEdgingProtocolAndProceed();
                 }
             }, 1000);
+        }
+
+        function checkEdgingProtocolAndProceed() {
+            const currentAction = actionSequence[currentActionIndex];
+            // If we are in the edging section and require multiple edges
+            if (currentAction.sectionId === 2 && currentAction.text.includes("EDGE AND HOLD") && edgeCount < requiredEdges) {
+                edgeCount++;
+                if (edgeCount < requiredEdges) {
+                    alert(`Edge count: ${edgeCount} of ${requiredEdges}. Drop back down and build up for the next edge.`);
+                    // Loop back slightly in the edging section to repeat an edge cycle
+                    loadAction(currentActionIndex - 2); 
+                    return;
+                }
+            }
+            loadAction(currentActionIndex + 1);
+        }
+
+        function skipAction() {
+            clearInterval(actionTimer);
+            clearInterval(vertPumpInterval);
+            // Just move to the next action step without cutting global session time
+            loadAction(currentActionIndex + 1);
+        }
+
+        function skipSection() {
+            clearInterval(actionTimer);
+            clearInterval(vertPumpInterval);
+
+            // Find the index of the next distinct section
+            const currentSectionId = actionSequence[currentActionIndex].sectionId;
+            let nextIndex = actionSequence.findIndex(act => act.sectionId > currentSectionId);
+
+            if (nextIndex !== -1) {
+                // Deduct a chunk of time (e.g., 120 seconds or proportionate remaining time) when skipping a whole section
+                let deduction = 120;
+                totalSessionSeconds = Math.max(0, totalSessionSeconds - deduction);
+                loadAction(nextIndex);
+            } else {
+                endGameSession();
+            }
+        }
+
+        function jumpToSelectedSection() {
+            const select = document.getElementById('section-jump-select');
+            const targetIndex = parseInt(select.value);
+            if (!isNaN(targetIndex)) {
+                clearInterval(actionTimer);
+                clearInterval(vertPumpInterval);
+                loadAction(targetIndex);
+            }
+            select.selectedIndex = 0; // Reset dropdown view
         }
 
         function setupVerticalMetronome(bpm) {
@@ -473,7 +571,7 @@
             if (bpm <= 0) {
                 vertBar.style.transition = 'none';
                 vertBar.style.height = '0%';
-                tempoLabel.textContent = "TEMPO: FREEZE";
+                tempoLabel.textContent = "TEMPO: FREEZE / BREATHE";
                 return;
             }
 
@@ -497,18 +595,13 @@
             }, strokeDurationMs / 2);
         }
 
-        function skipStage() {
-            clearInterval(actionTimer);
-            clearInterval(vertPumpInterval);
-            loadAction(currentActionIndex + 1);
-        }
-
         function previewDecree() {
             alert(`DOM PREPARATION INFO:\n\n` +
                   `- Sub Setup: ${sessionResults.subAttire}\n` +
                   `- Permitted Action: ${sessionResults.domAction}\n` +
                   `- Special Element: ${sessionResults.specialElement}\n` +
-                  `- Final Decree: ${sessionResults.step3Result}\n\n` +
+                  `- Final Decree: ${sessionResults.step3Result}\n` +
+                  `- Required Edges: ${requiredEdges}\n\n` +
                   `Prepare any necessary toys, oils, or comfort items right now.`);
         }
 
@@ -519,7 +612,7 @@
             document.getElementById('main-event-screen').innerHTML = `
                 <h3 class="prompt-title" style="color: var(--accent-pink);">Session Complete</h3>
                 <p>Final Ruling: <strong>${sessionResults.step3Result}</strong></p>
-                <p><em>Aftercare note:</em> Ensure proper attention and care are given to her now.</p>
+                <p><em>Aftercare note:</em> Ensure proper affection, cuddles, and care are given to her now.</p>
                 <p style="margin-top: 15px;">Execute final protocol.</p>
                 <button onclick="location.reload()">Start New Session</button>
             `;
